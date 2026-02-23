@@ -1,40 +1,56 @@
 # Flowkeeper
 
-Flowkeeper is a Spring Boot break reminder app.
-It serves a break page, opens it on a schedule, and triggers system beeps during the final seconds of the timer.
+**"Sitting is the new smoking."**
+
+Flowkeeper is a productivity-focused Spring Boot application that automatically initiates timed micro-breaks, opens a guided break screen, and schedules end-of-break audio cues.
+
+It was built to demonstrate practical backend engineering: scheduling, async execution, API design, static asset delivery, and resilient fallbacks for local desktop environments.
 
 ## Demo
 
-![Flowkeeper demo](assets/FlowKeeperDemo.gif)
+<img src="assets/FlowkeeperDemo.gif" alt="Flowkeeper demo" width="100%" />
 
-## Project Layout
+## Why This Project Stands Out
 
-- `server/`: Spring Boot backend + static `break.html`
-- `client/`: currently empty
+- Designed around a real workflow problem: avoiding long, uninterrupted focus sessions.
+- Combines backend scheduling + frontend UX in one deployable service.
+- Includes failure-tolerant behavior (desktop/audio fallback paths).
+- Shows clean separation of concerns between controller, service, and static UI.
 
-## Prerequisites
+## Tech Stack
 
-- Java 21+ (project target is Java 21)
-- Maven Wrapper (`./mvnw`, already included)
+- Java 21 target
+- Spring Boot 4 (Web MVC, Scheduling)
+- Maven Wrapper
+- Vanilla HTML/CSS/JavaScript frontend served from Spring static resources
 
-## Run the App
+## Architecture
 
-From the project root:
+```text
+Scheduler (@Scheduled)
+      |
+      v
+FlowkeeperService -----------------> Opens break page in browser
+      |
+      +-----> schedules async beeps (last N seconds)
+                       |
+                       v
+                 System audio / terminal bell fallback
 
-```bash
-cd server
-./mvnw spring-boot:run
+break.html (static UI) ---> POST /api/sound/schedule-last-five
 ```
 
-App URL:
+## Core Features
 
-- `http://localhost:8080/break.html`
+- Auto-opens a break page on a fixed cadence.
+- Displays a visual countdown with animated UI and wellness prompts.
+- Calls backend endpoint to schedule last-five-second beep alerts.
+- Safely handles short durations by clamping values.
+- Shuts down executor resources gracefully on app termination.
 
 ## API
 
-Endpoint:
-
-- `POST /api/sound/schedule-last-five?durationSeconds=<seconds>`
+`POST /api/sound/schedule-last-five?durationSeconds=<seconds>`
 
 Example:
 
@@ -42,45 +58,68 @@ Example:
 curl -X POST "http://localhost:8080/api/sound/schedule-last-five?durationSeconds=10"
 ```
 
-## How It Works
+Response:
 
-- `FlowkeeperService` opens the break page on a fixed schedule.
-- `break.html` starts a countdown and calls the sound endpoint.
-- The backend schedules beeps for the last 5 seconds (or less for short durations).
+- `202 Accepted` when beep scheduling is queued.
+
+## Local Setup
+
+Prerequisites:
+
+- Java 21+ installed
+- Shell with execution rights for `server/mvnw`
+
+Run:
+
+```bash
+cd server
+./mvnw spring-boot:run
+```
+
+Open:
+
+- `http://localhost:8080/break.html`
+
+## Repository Layout
+
+- `server/src/main/java/com/example/Flowkeeper/FlowkeeperApplication.java`: app bootstrap + scheduling enablement
+- `server/src/main/java/com/example/Flowkeeper/FlowkeeperService.java`: scheduling, browser open, beep executor
+- `server/src/main/java/com/example/Flowkeeper/SoundController.java`: REST endpoint for beep scheduling
+- `server/src/main/resources/static/break.html`: break UI, timer, API trigger
+
+## Engineering Notes
+
+- Uses a dedicated `ScheduledExecutorService` for non-blocking beep scheduling.
+- Beep logic is bounded (`min(5, duration)`), preventing invalid ranges.
+- Browser/audio calls include fallback handling to keep the app running in constrained environments.
 
 ## Troubleshooting
 
-### Port 8080 already in use
-
-Find what is using port 8080:
+### Port `8080` already in use
 
 ```bash
 lsof -nP -iTCP:8080 -sTCP:LISTEN
-```
-
-Stop the process:
-
-```bash
 kill <PID>
 ```
 
-If needed:
-
-```bash
-kill -9 <PID>
-```
-
-Or run Flowkeeper on another port:
+Run on another port:
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=9090
 ```
 
-### `mvn test` crashes on Java 22
+### Test crash on Java 22 (Mockito self-attach warning)
 
-If tests crash with JVM abort / Mockito self-attach warnings, try Java 21 for test runs:
+Use Java 21 for test runs:
 
 ```bash
 export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 ./mvnw test
 ```
+
+## Next Improvements
+
+- Add configurable break cadence/duration via properties or UI.
+- Persist user preferences.
+- Add unit tests for scheduler/beep timing logic.
+- Package with Docker for one-command onboarding.
