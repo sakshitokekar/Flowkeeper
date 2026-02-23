@@ -55,6 +55,13 @@ break.html (static UI) ---> POST /api/sound/schedule-last-five
 - Safely handles short durations by clamping values.
 - Shuts down executor resources gracefully on app termination.
 
+## Timing Details
+
+- Break page auto-open scheduler: runs every `1` hour after an initial `5` second delay.
+- Frontend break countdown (`break.html`): set to `5` minutes.
+- API default duration: `300` seconds (`5` minutes) when `durationSeconds` is not provided.
+- Beep behavior: backend schedules beeps for the last `min(5, durationSeconds)` seconds.
+
 ## API
 
 `POST /api/sound/schedule-last-five?durationSeconds=<seconds>`

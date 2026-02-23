@@ -21,7 +21,7 @@ public class FlowkeeperService {
         return t;
     });
 
-    @Scheduled(fixedRate = 15 * 1000, initialDelay = 5 * 1000)
+    @Scheduled(fixedRate = 60 * 60 * 1000, initialDelay = 5 * 1000)
     public void openBreakPage() {
         System.setProperty("java.awt.headless", "false");
         try {
