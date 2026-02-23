@@ -4,11 +4,11 @@
 
 Flowkeeper is a productivity-focused Spring Boot application that automatically initiates timed micro-breaks, opens a guided break screen, and schedules end-of-break audio cues.
 
-It was built to demonstrate practical backend engineering: scheduling, async execution, API design, static asset delivery, and resilient fallbacks for local desktop environments.
+It was built to show practical software engineering: turning a simple health idea into a clean, working product.
 
 ## Demo
 
-<img src="assets/FlowkeeperDemo.gif" alt="Flowkeeper demo" width="100%" />
+<img src="assets/FlowkeeperDemo.gif" alt="Flowkeeper demo" width="1100" height="620" />
 
 ## Why This Project Stands Out
 
@@ -16,6 +16,14 @@ It was built to demonstrate practical backend engineering: scheduling, async exe
 - Combines backend scheduling + frontend UX in one deployable service.
 - Includes failure-tolerant behavior (desktop/audio fallback paths).
 - Shows clean separation of concerns between controller, service, and static UI.
+
+## What I Built
+
+- Built automatic break reminders that launch on a fixed schedule.
+- Added a visual break screen with countdown, wellness prompts, and a demo-friendly UI.
+- Connected frontend and backend with a simple API for audio reminders.
+- Added safeguards so the app behaves well with short or unexpected timer values.
+- Structured the code cleanly so features can be extended later.
 
 ## Tech Stack
 
@@ -87,39 +95,6 @@ Open:
 - `server/src/main/java/com/example/Flowkeeper/SoundController.java`: REST endpoint for beep scheduling
 - `server/src/main/resources/static/break.html`: break UI, timer, API trigger
 
-## Engineering Notes
+## Author
 
-- Uses a dedicated `ScheduledExecutorService` for non-blocking beep scheduling.
-- Beep logic is bounded (`min(5, duration)`), preventing invalid ranges.
-- Browser/audio calls include fallback handling to keep the app running in constrained environments.
-
-## Troubleshooting
-
-### Port `8080` already in use
-
-```bash
-lsof -nP -iTCP:8080 -sTCP:LISTEN
-kill <PID>
-```
-
-Run on another port:
-
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=9090
-```
-
-### Test crash on Java 22 (Mockito self-attach warning)
-
-Use Java 21 for test runs:
-
-```bash
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-./mvnw test
-```
-
-## Next Improvements
-
-- Add configurable break cadence/duration via properties or UI.
-- Persist user preferences.
-- Add unit tests for scheduler/beep timing logic.
-- Package with Docker for one-command onboarding.
+Sakshi Tokekar
