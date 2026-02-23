@@ -8,7 +8,7 @@ It was built to show practical software engineering: turning a simple health ide
 
 ## Demo
 
-![Flowkeeper Demo](assets/FlowkeeperDemo.gif)
+![Flowkeeper Demo](assets/Demo.gif)
 
 ## Why This Project Stands Out
 
