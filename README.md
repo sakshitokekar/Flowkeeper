@@ -8,8 +8,7 @@ It was built to show practical software engineering: turning a simple health ide
 
 ## Demo
 
-<img src="assets/FlowkeeperDemo.gif" alt="Flowkeeper demo" width="1100" height="620" />
-
+![Flowkeeper demo](assets/FlowkeeperDemo.gif)
 ## Why This Project Stands Out
 
 - Designed around a real workflow problem: avoiding long, uninterrupted focus sessions.
