@@ -8,7 +8,7 @@ It was built to show practical software engineering: turning a simple health ide
 
 ## Demo
 
-![Flowkeeper demo](assets/FlowkeeperDemo.gif)
+![Flowkeeper Demo](assets/FlowkeeperDemo.gif)
 
 ## Why This Project Stands Out
 
@@ -33,7 +33,6 @@ It was built to show practical software engineering: turning a simple health ide
 - Vanilla HTML/CSS/JavaScript frontend served from Spring static resources
 
 ## Architecture
-
 ```text
 Scheduler (@Scheduled)
       |
@@ -61,7 +60,6 @@ break.html (static UI) ---> POST /api/sound/schedule-last-five
 `POST /api/sound/schedule-last-five?durationSeconds=<seconds>`
 
 Example:
-
 ```bash
 curl -X POST "http://localhost:8080/api/sound/schedule-last-five?durationSeconds=10"
 ```
@@ -78,7 +76,6 @@ Prerequisites:
 - Shell with execution rights for `server/mvnw`
 
 Run:
-
 ```bash
 cd server
 ./mvnw spring-boot:run
